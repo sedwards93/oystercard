@@ -6,4 +6,12 @@ describe Oystercard do
   it "Instances of the Oystercard class are initialized witha balance of 0" do
     expect(subject.balance).to eq(0)
   end
+  describe '#top_up' do
+    it "Insrances of the Oystercard class can respond to the top_up method" do
+      expect(subject).to respond_to(:top_up).with(1).argument
+    end
+    it "When invoked, the balance of the oystercard will increase by the balance amount" do
+      expect { subject.top_up(10) }.to change { subject.balance }.from(0).to(10)
+    end
+  end
 end
