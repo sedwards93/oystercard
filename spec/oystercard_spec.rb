@@ -13,5 +13,9 @@ describe Oystercard do
     it "When invoked, the balance of the oystercard will increase by the balance amount" do
       expect { subject.top_up(10) }.to change { subject.balance }.from(0).to(10)
     end
+    it "Raises an error when the user tries to top up above the maximum limit" do
+      limit = Oystercard::LIMIT
+      expect { subject.top_up(limit + 1)}.to raise_error "You cannot have more than £#{limit} credit"
+    end
   end
 end
