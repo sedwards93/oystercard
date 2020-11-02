@@ -4,17 +4,28 @@ class Oystercard
 
   def initialize
     @balance = 0
+    @status = false
+  
   end
 
   def top_up(amount)
+    raise "You cannot have more than £#{LIMIT} credit" if amount + balance > LIMIT
     @balance += amount
-    if @balance > LIMIT
-      @balance -= amount
-      raise "You cannot have more than £#{LIMIT} credit"
-    end
   end
 
   def deduct(amount)
     @balance -= amount
+  end
+
+  def in_journey?
+    @status
+  end
+
+  def touch_in
+    @status = true
+  end
+
+  def touch_out
+    @status = false
   end
 end
