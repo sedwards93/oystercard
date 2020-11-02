@@ -45,8 +45,12 @@ describe Oystercard do
       expect(subject).to respond_to(:touch_in)
     end
     it "When invoked, expect in_journey? to return true" do
+      subject.top_up(Oystercard::MINIMUM)
       subject.touch_in
       expect(subject).to be_in_journey
+    end
+    it "Raises an error when there are insufficient funds on the oystercard" do
+      expect { subject.touch_in }.to raise_error "You have insufficient funds."
     end
   end
 
