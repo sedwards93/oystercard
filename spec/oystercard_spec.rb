@@ -18,4 +18,13 @@ describe Oystercard do
       expect { subject.top_up(limit + 1)}.to raise_error "You cannot have more than £#{limit} credit"
     end
   end
+  describe '#deduct' do
+    it "Insrances of the Oystercard class can respond to the deduct method" do
+      expect(subject).to respond_to(:deduct).with(1).argument
+    end
+    it "When invoked, the balance of the oystercard will decrease by the balance amount" do
+      subject.top_up(20)
+      expect { subject.deduct(10) }.to change { subject.balance }.from(20).to(10)
+    end
+  end
 end

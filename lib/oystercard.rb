@@ -13,4 +13,8 @@ class Oystercard
       raise "You cannot have more than £#{LIMIT} credit"
     end
   end
+
+  def deduct(amount)
+    @balance -= amount
+  end
 end
