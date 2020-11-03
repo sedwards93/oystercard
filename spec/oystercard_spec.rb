@@ -21,15 +21,15 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
-    it "Insrances of the Oystercard class can respond to the deduct method" do
-      expect(subject).to respond_to(:deduct).with(1).argument
-    end
-    it "When invoked, the balance of the oystercard will decrease by the balance amount" do
-      subject.top_up(20)
-      expect { subject.deduct(10) }.to change { subject.balance }.from(20).to(10)
-    end
-  end
+  # describe '#deduct' do
+  #   it "Insrances of the Oystercard class can respond to the deduct method" do
+  #     expect(subject).to respond_to(:deduct).with(1).argument
+  #   end
+  #   it "When invoked, the balance of the oystercard will decrease by the balance amount" do
+  #     subject.top_up(20)
+  #     expect { subject.deduct(10) }.to change { subject.balance }.from(20).to(10)
+  #   end
+  # end
 
   describe '#in_journey?' do
     it "Instances of the Oystercard class can respond to the in_journey? method" do
@@ -61,6 +61,10 @@ describe Oystercard do
     it "When invoked, expect in_journey to return false" do
       subject.touch_out
       expect(subject).not_to be_in_journey
+    end
+    it "It reduces the balance by the minimum fare of £1." do
+      subject.top_up(Oystercard::MINIMUM)
+      expect {subject.touch_out}.to change {subject.balance }.by(-1)
     end
   end
 end
