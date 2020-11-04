@@ -1,12 +1,16 @@
 require 'oystercard'
 describe Oystercard do
-  let(:station) {double :station}
+  let(:entry_station) {double :station}
+  let(:exit_station) {double :station}
 
   it "Can create instances of the Oystercard class" do
     expect(subject).to be_an_instance_of(Oystercard)
   end
   it "Instances of the Oystercard class are initialized witha balance of 0" do
     expect(subject.balance).to eq(0)
+  end
+  it "Instances of the Oystercard class are initialized with an empty journey instance" do 
+    expect(subject.journeys).to be_empty
   end
 
   describe '#top_up' do
@@ -31,36 +35,50 @@ describe Oystercard do
   describe '#touch_in' do
     it "When invoked, expect in_journey? to return true" do
       subject.top_up(Oystercard::MINIMUM)
-      subject.touch_in(station)
+      subject.touch_in(entry_station)
       expect(subject).to be_in_journey
     end
     it "Raises an error when there are insufficient funds on the oystercard" do
-      expect { subject.touch_in(station) }.to raise_error "You have insufficient funds."
+      expect { subject.touch_in(entry_station) }.to raise_error "You have insufficient funds."
     end
     it "Instances of the Oystercard class remember the entry station after touch_in" do
       subject.top_up(Oystercard::MINIMUM)
-      subject.touch_in(station)
-      expect(subject.entry_station).to eq(station) 
+      subject.touch_in(entry_station)
+      expect(subject.entry_station).to eq(entry_station) 
+    end
+    
+    let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
+    it "Stores a complete journey" do
+      subject.top_up(Oystercard::MINIMUM)
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
+      expect(subject.journeys).to include journey
     end
   end
 
   describe '#touch_out' do
     it "Instances of the Oystercard class can respond to the in_journey? method" do
-      expect(subject).to respond_to(:touch_out)
+      expect(subject).to respond_to :touch_out
     end
     it "When invoked, expect in_journey to return false" do
-      subject.touch_out
+      subject.touch_out(exit_station)
       expect(subject).not_to be_in_journey
     end
     it "It reduces the balance by the minimum fare of £1." do
       subject.top_up(Oystercard::MINIMUM)
-      expect {subject.touch_out}.to change {subject.balance }.by(-1)
+      expect {subject.touch_out(exit_station)}.to change {subject.balance }.by(-1)
     end
-    it "Instances of the Oystercard class set the entry station to nil after touch_out" do
+    it "Instances of the Oystercard class set the entry_station to nil after touch_out" do
       subject.top_up(Oystercard::MINIMUM)
-      subject.touch_in(station)
-      subject.touch_out
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
       expect(subject.entry_station).to eq(nil)
+    end
+    it "Touches out of a specific station" do
+      subject.top_up(Oystercard::MINIMUM)
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
+      expect(subject.exit_station).to eq(exit_station)
     end
   end
 end
