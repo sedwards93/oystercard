@@ -1,5 +1,6 @@
 require 'oystercard'
 describe Oystercard do
+  let(:station) {double :station}
 
   it "Can create instances of the Oystercard class" do
     expect(subject).to be_an_instance_of(Oystercard)
@@ -41,16 +42,18 @@ describe Oystercard do
   end
 
   describe '#touch_in' do
-    it "Instances of the Oystercard class can respond to the touch_in method" do
-      expect(subject).to respond_to(:touch_in)
-    end
     it "When invoked, expect in_journey? to return true" do
       subject.top_up(Oystercard::MINIMUM)
-      subject.touch_in
+      subject.touch_in(station)
       expect(subject).to be_in_journey
     end
     it "Raises an error when there are insufficient funds on the oystercard" do
-      expect { subject.touch_in }.to raise_error "You have insufficient funds."
+      expect { subject.touch_in(station) }.to raise_error "You have insufficient funds."
+    end
+    it "Instances of the Oystercard class remember the entry station after touch_in" do
+      subject.top_up(Oystercard::MINIMUM)
+      subject.touch_in(station)
+      expect(subject.entry_station).to eq(station) 
     end
   end
 
