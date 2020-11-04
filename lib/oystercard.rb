@@ -3,8 +3,8 @@ class Oystercard
   LIMIT = 90
   MINIMUM = 1
 
-  def initialize
-    @balance = 0
+  def initialize(balance = 0)
+    @balance = balance
     @entry_station = nil
     @exit_station = nil
     @journeys = []
@@ -12,7 +12,7 @@ class Oystercard
   end
 
   def top_up(amount)
-    raise "You cannot have more than £#{LIMIT} credit" if amount + balance > LIMIT
+    raise "You cannot topup over £#{LIMIT}" if amount + balance > LIMIT
     @balance += amount
   end
 
@@ -28,16 +28,18 @@ class Oystercard
   def touch_out(exit_station)
     deduct(MINIMUM)
     @exit_station = exit_station
-    journey = {entry_station: @entry_station, exit_station: @exit_station}
-    @journeys << journey
-    @entry_station = nil
-
+    save_journey
   end
 
   private
 
   def deduct(amount)
     @balance -= amount
+  end
+
+  def save_journey
+    @journeys << {entry_station: @entry_station, exit_station: @exit_station}
+    @entry_station = nil
   end
 
 end
