@@ -21,4 +21,5 @@ class Journey
   def fare
     complete? ? MINIMUM_FARE : MAXIMUM_FARE
   end
+  
 end
