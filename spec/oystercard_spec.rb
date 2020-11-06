@@ -14,8 +14,12 @@ describe Oystercard do
     expect(subject.balance).to eq(0)
   end
 
-  it "Instances of the Oystercard class are initialized with an empty journey instance" do 
+  it "Instances of the Oystercard class are initialized with an empty journeys instance" do 
     expect(subject.journeys).to be_empty
+  end
+
+  it "Instances of the Oystercard class are initialized with an empty journey instance" do
+    expect(subject.journey).to eq(nil)
   end
 
   describe '#top_up' do
@@ -33,61 +37,48 @@ describe Oystercard do
     end
   end
 
-  describe '#in_journey?' do
-
-    it "Instances of the Oystercard class can respond to the in_journey? method" do
-      expect(subject).to respond_to(:in_journey?)
-    end
-
-    it "When invoked, expect in_journey to return false" do
-      subject.touch_out(exit_station)
-      expect(subject).not_to be_in_journey
-    end
-  end
-
   describe '#touch_in' do
 
-    it "When invoked, expect in_journey? to return true" do
-      topped_up_card.touch_in(entry_station)
-      expect(topped_up_card).to be_in_journey
+    it "Instances of the oystercard class respond to touch_in" do
+      expect(topped_up_card).to respond_to(:touch_in).with(1).argument
     end
 
     it "Raises an error when there are insufficient funds on the oystercard" do
       expect { subject.touch_in(entry_station) }.to raise_error "You have insufficient funds."
     end
-    
-    it "Instances of the Oystercard class remember the entry station after touch_in" do
-      topped_up_card.touch_in(entry_station)
-      expect(topped_up_card.entry_station).to eq(entry_station) 
-    end
+
   end
 
   describe '#touch_out' do
-
-    it "It reduces the balance by the minimum fare of £1." do
-      expect {subject.touch_out(exit_station)}.to change {subject.balance }.by(-1)
+    it "Instances of the oystercard class respond to touch_out" do
+      expect(topped_up_card).to respond_to(:touch_out).with(1).argument
     end
-
-    context 'Completed Journey' do
-      let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
-      before do
-        topped_up_card.touch_in(entry_station)
-        topped_up_card.touch_out(exit_station) 
-      end
-
-      it "Stores a complete journey" do
-        expect(topped_up_card.journeys).to include journey
-      end
-
-      it "Instances of the Oystercard class set the entry_station to nil after touch_out" do
-        expect(topped_up_card.entry_station).to eq(nil)
-      end
-
-      it "Touches out of a specific station" do
-        expect(topped_up_card.exit_station).to eq(exit_station)
-      end
-
-      end
   end
+
+    # it "It reduces the balance by the minimum fare of £1." do
+    #   expect {subject.touch_out(exit_station)}.to change {subject.balance }.by(-1)
+    # end
+
+    # context 'Completed Journey' do
+    #   let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
+    #   before do
+    #     topped_up_card.touch_in(entry_station)
+    #     topped_up_card.touch_out(exit_station) 
+    #   end
+
+      # it "Stores a complete journey" do
+      #   expect(topped_up_card.journeys).to include journey
+      # end
+
+      # it "Instances of the Oystercard class set the entry_station to nil after touch_out" do
+      #   expect(topped_up_card.entry_station).to eq(nil)
+      # end
+
+      # it "Touches out of a specific station" do
+      #   expect(topped_up_card.exit_station).to eq(exit_station)
+      # end
+
+  #     end
+  # end
 end
 
