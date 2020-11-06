@@ -14,13 +14,14 @@ describe Oystercard do
     expect(subject.balance).to eq(0)
   end
 
-  it "Instances of the Oystercard class are initialized with an empty journeys instance" do 
+  it "Instances of the Oystercard class are initialized an journeys instance" do 
     expect(subject.journeys).to be_empty
   end
 
-  it "Instances of the Oystercard class are initialized with an empty journey instance" do
-    expect(subject.journey).to eq(nil)
-  end
+  # let(:journey) {double :journey}
+  # it "Instances of the Oystercard class are initialized with a journey instance" do
+  #   expect(subject.journey).be_an_instance_of :journey
+  # end
 
   describe '#top_up' do
 
